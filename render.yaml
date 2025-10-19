@@ -5,14 +5,12 @@ services:
     plan: standard  # $7/mo plan with persistent storage and system access
     region: oregon
     buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    preDeployCommand: export PLAYWRIGHT_BROWSERS_PATH=/opt/render/project/.browsers && python -m playwright install chromium && python -m playwright install-deps chromium
+    preDeployCommand: python -m playwright install chromium && python -m playwright install-deps chromium
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11
-      - key: PLAYWRIGHT_BROWSERS_PATH
-        value: /opt/render/project/.browsers
       - key: DATABASE_PATH
         value: ./data/audit.db
       - key: PDF_STORAGE_PATH
