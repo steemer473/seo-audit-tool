@@ -4,7 +4,7 @@ services:
     env: python
     plan: standard  # $7/mo plan with persistent storage and system access
     region: oregon
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt && python -m playwright install chromium && python -m playwright install-deps chromium
     startCommand: bash start.sh
     healthCheckPath: /health
     envVars:
