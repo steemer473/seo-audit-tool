@@ -39,13 +39,25 @@ class SEOAuditEngine:
                 ]
             }
 
-            # On Render, use the full chromium browser instead of headless shell
-            chromium_path = os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH')
-            if chromium_path:
-                print(f"[DEBUG] Using explicit Chromium path: {chromium_path}")
-                launch_options['executable_path'] = chromium_path
+            # On Render, try to find and use the full chromium browser
+            # Try multiple paths as fallback
+            chromium_paths = [
+                os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH'),  # From env var
+                '/opt/render/.cache/ms-playwright/chromium-1187/chrome-linux/chrome',  # Direct path
+                os.path.expanduser('~/.cache/ms-playwright/chromium-1187/chrome-linux/chrome'),  # User cache
+            ]
+
+            executable_path = None
+            for path in chromium_paths:
+                if path and os.path.exists(path):
+                    executable_path = path
+                    print(f"[DEBUG] Found Chromium at: {path}")
+                    break
+
+            if executable_path:
+                launch_options['executable_path'] = executable_path
             else:
-                print("[DEBUG] No PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH set")
+                print("[DEBUG] No Chromium executable found, using Playwright default")
 
             browser = await p.chromium.launch(**launch_options)
 
