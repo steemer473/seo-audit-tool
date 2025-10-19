@@ -40,12 +40,11 @@ class SEOAuditEngine:
                 ]
             }
 
-            # Force use of full chromium browser on production (Render)
-            # Hardcode path since dynamic detection wasn't working
-            if os.environ.get('ENVIRONMENT') == 'production':
-                chromium_path = '/opt/render/.cache/ms-playwright/chromium-1187/chrome-linux/chrome'
-                print(f"[AUDIT] Production mode - using chromium at: {chromium_path}")
-                launch_options['executable_path'] = chromium_path
+            # ALWAYS try to use full chromium browser first (works on Render)
+            # If path doesn't exist, Playwright will fall back to default
+            chromium_path = '/opt/render/.cache/ms-playwright/chromium-1187/chrome-linux/chrome'
+            print(f"[AUDIT] Attempting to use chromium at: {chromium_path}")
+            launch_options['executable_path'] = chromium_path
 
             browser = await p.chromium.launch(**launch_options)
 
