@@ -7,16 +7,20 @@ services:
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
-      python -m playwright install chromium
-      python -m playwright install-deps chromium
+      echo "Installing Playwright browsers..."
+      PLAYWRIGHT_BROWSERS_PATH=/opt/render/project/.browsers python -m playwright install chromium
+      echo "Installing system dependencies..."
+      python -m playwright install-deps chromium || echo "Warning: Could not install all system dependencies"
       echo "Verifying Playwright installation..."
-      ls -la $HOME/.cache/ms-playwright/ || echo "Browser cache not found at default location"
+      ls -la /opt/render/project/.browsers/ || echo "Browser cache not found"
       python -m playwright --version
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11
+      - key: PLAYWRIGHT_BROWSERS_PATH
+        value: /opt/render/project/.browsers
       - key: DATABASE_PATH
         value: ./data/audit.db
       - key: PDF_STORAGE_PATH
