@@ -8,6 +8,7 @@ from urllib.parse import urlparse, urljoin
 import asyncio
 import re
 import os
+import glob
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
@@ -40,24 +41,45 @@ class SEOAuditEngine:
             }
 
             # On Render, try to find and use the full chromium browser
-            # Try multiple paths as fallback
-            chromium_paths = [
-                os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH'),  # From env var
-                '/opt/render/.cache/ms-playwright/chromium-1187/chrome-linux/chrome',  # Direct path
-                os.path.expanduser('~/.cache/ms-playwright/chromium-1187/chrome-linux/chrome'),  # User cache
-            ]
+            print(f"[DEBUG] Looking for Chromium executable...")
+            print(f"[DEBUG] Current working directory: {os.getcwd()}")
+            print(f"[DEBUG] Home directory: {os.path.expanduser('~')}")
 
+            # Try multiple methods to find chromium
             executable_path = None
-            for path in chromium_paths:
-                if path and os.path.exists(path):
-                    executable_path = path
-                    print(f"[DEBUG] Found Chromium at: {path}")
-                    break
+
+            # Method 1: Environment variable
+            env_path = os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH')
+            if env_path:
+                print(f"[DEBUG] Env var set to: {env_path}")
+                if os.path.exists(env_path):
+                    executable_path = env_path
+                    print(f"[DEBUG] Using env var path")
+                else:
+                    print(f"[DEBUG] Env var path doesn't exist")
+
+            # Method 2: Glob search for chromium executable
+            if not executable_path:
+                print(f"[DEBUG] Searching with glob...")
+                search_patterns = [
+                    '/opt/render/.cache/ms-playwright/chromium-*/chrome-linux/chrome',
+                    os.path.expanduser('~/.cache/ms-playwright/chromium-*/chrome-linux/chrome'),
+                ]
+                for pattern in search_patterns:
+                    print(f"[DEBUG] Trying pattern: {pattern}")
+                    matches = glob.glob(pattern)
+                    if matches:
+                        executable_path = matches[0]
+                        print(f"[DEBUG] Found via glob: {executable_path}")
+                        break
+                    else:
+                        print(f"[DEBUG] No matches for pattern")
 
             if executable_path:
+                print(f"[DEBUG] Using executable_path: {executable_path}")
                 launch_options['executable_path'] = executable_path
             else:
-                print("[DEBUG] No Chromium executable found, using Playwright default")
+                print("[DEBUG] No Chromium executable found, using Playwright default (will likely fail)")
 
             browser = await p.chromium.launch(**launch_options)
 
