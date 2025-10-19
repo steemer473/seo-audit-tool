@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 import asyncio
 import re
+import os
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
@@ -27,15 +28,23 @@ class SEOAuditEngine:
     async def run_audit(self) -> Dict[str, Any]:
         """Main audit orchestrator - runs all checks in one session"""
         async with async_playwright() as p:
-            browser = await p.chromium.launch(
-                headless=True,
-                args=[
+            # Use explicit executable path on production (Render)
+            launch_options = {
+                'headless': True,
+                'args': [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage',
                     '--disable-blink-features=AutomationControlled'
                 ]
-            )
+            }
+
+            # On Render, use the full chromium browser instead of headless shell
+            chromium_path = os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH')
+            if chromium_path and os.path.exists(chromium_path):
+                launch_options['executable_path'] = chromium_path
+
+            browser = await p.chromium.launch(**launch_options)
 
             try:
                 page = await browser.new_page()
