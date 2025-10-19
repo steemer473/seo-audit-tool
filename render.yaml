@@ -4,16 +4,7 @@ services:
     env: python
     plan: standard  # $7/mo plan with persistent storage and system access
     region: oregon
-    buildCommand: |
-      pip install --upgrade pip
-      pip install -r requirements.txt
-      echo "Installing Playwright browsers..."
-      PLAYWRIGHT_BROWSERS_PATH=/opt/render/project/.browsers python -m playwright install chromium
-      echo "Installing system dependencies..."
-      python -m playwright install-deps chromium || echo "Warning: Could not install all system dependencies"
-      echo "Verifying Playwright installation..."
-      ls -la /opt/render/project/.browsers/ || echo "Browser cache not found"
-      python -m playwright --version
+    buildCommand: chmod +x build.sh && ./build.sh
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
