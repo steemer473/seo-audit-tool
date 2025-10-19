@@ -41,8 +41,11 @@ class SEOAuditEngine:
 
             # On Render, use the full chromium browser instead of headless shell
             chromium_path = os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH')
-            if chromium_path and os.path.exists(chromium_path):
+            if chromium_path:
+                print(f"[DEBUG] Using explicit Chromium path: {chromium_path}")
                 launch_options['executable_path'] = chromium_path
+            else:
+                print("[DEBUG] No PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH set")
 
             browser = await p.chromium.launch(**launch_options)
 
