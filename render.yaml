@@ -2,12 +2,13 @@ services:
   - type: web
     name: seo-audit-tool
     env: python
-    plan: starter  # Start with free tier, upgrade to standard ($7/mo) when ready
+    plan: standard  # $7/mo plan with persistent storage and system access
     region: oregon
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
-      PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright playwright install chromium
+      playwright install chromium
+      playwright install-deps chromium
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
@@ -35,6 +36,7 @@ services:
         generateValue: true
       - key: ENVIRONMENT
         value: production
-
-# Disk storage for reports (upgrade to standard plan for persistent disk)
-# Standard plan includes 10GB SSD for $7/month
+    disk:
+      name: seo-audit-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
