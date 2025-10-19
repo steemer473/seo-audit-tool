@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Audit Report - {{ domain }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: {{ colors.text_dark }};
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', 'Helvetica', 'Arial', sans-serif;
+            color: {{ colors.primary_navy }};
+            font-weight: 700;
+            page-break-after: avoid;
+        }
+
+        h1 {
+            font-size: 28pt;
+            margin-bottom: 10pt;
+            border-bottom: 3px solid {{ colors.accent_orange }};
+            padding-bottom: 10pt;
+        }
+
+        h2 {
+            font-size: 20pt;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            color: {{ colors.primary_navy }};
+        }
+
+        h3 {
+            font-size: 16pt;
+            margin-top: 18pt;
+            margin-bottom: 10pt;
+        }
+
+        .cover-page {
+            text-align: center;
+            page-break-after: always;
+            padding-top: 100pt;
+        }
+
+        .cover-title {
+            font-size: 36pt;
+            font-weight: 800;
+            color: {{ colors.primary_navy }};
+            margin-bottom: 15pt;
+            margin-top: 40pt;
+        }
+
+        .cover-domain {
+            font-size: 18pt;
+            color: {{ colors.text_dark }};
+            margin-bottom: 40pt;
+        }
+
+        .cover-date {
+            font-size: 12pt;
+            color: #999;
+            margin-bottom: 20pt;
+        }
+
+        .score-badge {
+            display: inline-block;
+            background: {{ colors.light_100 }};
+            border: 5px solid {{ colors.accent_orange }};
+            border-radius: 50%;
+            width: 150pt;
+            height: 150pt;
+            line-height: 150pt;
+            font-size: 60pt;
+            font-weight: 800;
+            color: {{ colors.accent_orange }};
+            margin: 30pt auto;
+        }
+
+        .grade-text {
+            font-size: 24pt;
+            color: {{ colors.primary_navy }};
+            margin-top: 20pt;
+            font-weight: 700;
+        }
+
+        .section {
+            margin-bottom: 30pt;
+            page-break-inside: avoid;
+        }
+
+        .metric-box {
+            background: {{ colors.light_100 }};
+            border-left: 4px solid {{ colors.accent_cyan }};
+            padding: 12pt;
+            margin: 10pt 0;
+            page-break-inside: avoid;
+        }
+
+        .metric-box h4 {
+            font-size: 14pt;
+            margin-bottom: 6pt;
+            color: {{ colors.primary_navy }};
+        }
+
+        .metric-box p {
+            font-size: 11pt;
+            color: #555;
+        }
+
+        .chart-container {
+            text-align: center;
+            margin: 20pt 0;
+            page-break-inside: avoid;
+        }
+
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15pt 0;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: {{ colors.primary_navy }};
+            color: white;
+            padding: 10pt;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11pt;
+        }
+
+        td {
+            padding: 8pt 10pt;
+            border-bottom: 1px solid {{ colors.border }};
+            font-size: 10pt;
+        }
+
+        tr:nth-child(even) {
+            background: {{ colors.light_100 }};
+        }
+
+        .recommendation {
+            background: white;
+            border: 1px solid {{ colors.border }};
+            border-radius: 6pt;
+            padding: 12pt;
+            margin: 10pt 0;
+            page-break-inside: avoid;
+        }
+
+        .recommendation.critical {
+            border-left: 4px solid #F24444;
+        }
+
+        .recommendation.high {
+            border-left: 4px solid {{ colors.accent_orange }};
+        }
+
+        .recommendation.medium {
+            border-left: 4px solid {{ colors.accent_cyan }};
+        }
+
+        .recommendation h4 {
+            font-size: 13pt;
+            margin-bottom: 6pt;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4pt 10pt;
+            border-radius: 4pt;
+            font-size: 9pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 6pt;
+        }
+
+        .priority-critical {
+            background: #F24444;
+        }
+
+        .priority-high {
+            background: {{ colors.accent_orange }};
+        }
+
+        .priority-medium {
+            background: {{ colors.accent_cyan }};
+        }
+
+        .priority-low {
+            background: #999;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15pt;
+            margin: 20pt 0;
+        }
+
+        .score-card {
+            background: {{ colors.light_100 }};
+            border-radius: 8pt;
+            padding: 15pt;
+            text-align: center;
+        }
+
+        .score-card-title {
+            font-size: 11pt;
+            font-weight: 600;
+            color: {{ colors.text_dark }};
+            margin-bottom: 8pt;
+        }
+
+        .score-card-value {
+            font-size: 32pt;
+            font-weight: 800;
+            color: {{ colors.accent_orange }};
+        }
+
+        .score-card-subtitle {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 4pt;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12pt;
+            height: 12pt;
+            border-radius: 50%;
+            margin-right: 6pt;
+            vertical-align: middle;
+        }
+
+        .status-good {
+            background: #00E5A0;
+        }
+
+        .status-warning {
+            background: {{ colors.accent_orange }};
+        }
+
+        .status-critical {
+            background: #F24444;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 9pt;
+            color: {{ colors.light_300 }};
+            margin-top: 30pt;
+            padding-top: 15pt;
+            border-top: 1px solid {{ colors.border }};
+        }
+
+        code {
+            background: {{ colors.light_100 }};
+            padding: 2pt 6pt;
+            border-radius: 3pt;
+            font-family: 'Courier', monospace;
+            font-size: 9pt;
+        }
+
+        ul, ol {
+            margin-left: 20pt;
+            margin-bottom: 10pt;
+        }
+
+        li {
+            margin-bottom: 6pt;
+        }
+
+        .key-metric {
+            font-weight: 700;
+            color: {{ colors.primary_navy }};
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <h1 class="cover-title">SEO Audit Report</h1>
+        <p class="cover-domain">{{ domain }}</p>
+        <div class="score-badge">{{ score.total_score }}</div>
+        <p class="grade-text">Grade: {{ score.grade }}</p>
+        <p class="cover-date">Generated on {{ generated_date }}</p>
+        <p class="cover-date">Level Play Digital</p>
+    </div>
+
+    <!-- Executive Summary -->
+    <div class="section">
+        <h1>Executive Summary</h1>
+        <p>
+            This comprehensive SEO audit analyzes your website's technical foundation, on-page optimization,
+            and competitive positioning. Your overall SEO score is <strong>{{ score.total_score }}/100</strong>,
+            placing you in the <strong>{{ score.grade }}</strong> category.
+        </p>
+
+        <div class="score-grid">
+            <div class="score-card">
+                <div class="score-card-title">Technical SEO</div>
+                <div class="score-card-value">{{ score.breakdown.technical.score }}</div>
+                <div class="score-card-subtitle">{{ score.breakdown.technical.weight }}% weight</div>
+            </div>
+            <div class="score-card">
+                <div class="score-card-title">On-Page SEO</div>
+                <div class="score-card-value">{{ score.breakdown.onpage.score }}</div>
+                <div class="score-card-subtitle">{{ score.breakdown.onpage.weight }}% weight</div>
+            </div>
+            <div class="score-card">
+                <div class="score-card-title">Competitive</div>
+                <div class="score-card-value">{{ score.breakdown.competitive.score }}</div>
+                <div class="score-card-subtitle">{{ score.breakdown.competitive.weight }}% weight</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <img src="{{ charts.score_gauge }}" alt="Overall Score">
+        </div>
+
+        <div class="chart-container">
+            <img src="{{ charts.breakdown_bar }}" alt="Score Breakdown">
+        </div>
+    </div>
+
+    <!-- Top Recommendations -->
+    <div class="section page-break">
+        <h1>Priority Recommendations</h1>
+        <p>
+            Based on our analysis, here are the most critical improvements to boost your SEO performance:
+        </p>
+
+        {% for rec in score.recommendations[:5] %}
+        <div class="recommendation {{ rec.priority }}">
+            <span class="priority-badge priority-{{ rec.priority }}">{{ rec.priority }}</span>
+            <h4>{{ rec.issue }}</h4>
+            <p><strong>Category:</strong> {{ rec.category }}</p>
+            <p><strong>Recommendation:</strong> {{ rec.recommendation }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Technical SEO Analysis -->
+    <div class="section page-break">
+        <h1>Technical SEO Analysis</h1>
+
+        <h2>Security & Infrastructure</h2>
+        <div class="metric-box">
+            <h4>
+                <span class="status-indicator status-{% if audit.technical.https %}good{% else %}critical{% endif %}"></span>
+                HTTPS/SSL Certificate
+            </h4>
+            <p>
+                {% if audit.technical.https %}
+                ✓ Your site uses HTTPS encryption, which is essential for security and SEO.
+                {% else %}
+                ✗ Your site does not use HTTPS. This is a critical issue that must be fixed immediately.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="metric-box">
+            <h4>
+                <span class="status-indicator status-{% if audit.technical.robots_txt_exists %}good{% else %}warning{% endif %}"></span>
+                Robots.txt File
+            </h4>
+            <p>
+                {% if audit.technical.robots_txt_exists %}
+                ✓ Robots.txt file found at your domain root.
+                {% else %}
+                ✗ No robots.txt file detected. Consider adding one to guide search engine crawlers.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="metric-box">
+            <h4>
+                <span class="status-indicator status-{% if audit.technical.sitemap_exists %}good{% else %}warning{% endif %}"></span>
+                XML Sitemap
+            </h4>
+            <p>
+                {% if audit.technical.sitemap_exists %}
+                ✓ XML sitemap found, helping search engines discover your pages.
+                {% else %}
+                ✗ No XML sitemap detected. Create and submit one to Google Search Console.
+                {% endif %}
+            </p>
+        </div>
+
+        <h2>Mobile & Responsiveness</h2>
+        <div class="metric-box">
+            <h4>
+                <span class="status-indicator status-{% if audit.technical.mobile_responsive %}good{% else %}critical{% endif %}"></span>
+                Mobile Responsive Design
+            </h4>
+            <p>
+                {% if audit.technical.mobile_responsive %}
+                ✓ Your site is mobile-responsive with proper viewport configuration.
+                {% else %}
+                ✗ Your site is not mobile-responsive. This is critical for modern SEO.
+                {% endif %}
+            </p>
+        </div>
+
+        <h2>Performance Metrics</h2>
+        <div class="chart-container">
+            <img src="{{ charts.performance }}" alt="Performance Metrics">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Page Load Time</td>
+                    <td>{{ (audit.performance.load_time_ms / 1000)|round(2) }}s</td>
+                    <td>
+                        {% if audit.performance.load_time_ms < 3000 %}
+                        <span class="status-indicator status-good"></span> Good
+                        {% elif audit.performance.load_time_ms < 5000 %}
+                        <span class="status-indicator status-warning"></span> Fair
+                        {% else %}
+                        <span class="status-indicator status-critical"></span> Slow
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>DOM Content Loaded</td>
+                    <td>{{ (audit.performance.dom_content_loaded_ms / 1000)|round(2) }}s</td>
+                    <td>
+                        {% if audit.performance.dom_content_loaded_ms < 2000 %}
+                        <span class="status-indicator status-good"></span> Good
+                        {% else %}
+                        <span class="status-indicator status-warning"></span> Needs improvement
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Largest Contentful Paint (LCP)</td>
+                    <td>{{ (audit.performance.lcp / 1000)|round(2) }}s</td>
+                    <td>
+                        {% if audit.performance.lcp < 2500 %}
+                        <span class="status-indicator status-good"></span> Good
+                        {% elif audit.performance.lcp < 4000 %}
+                        <span class="status-indicator status-warning"></span> Needs improvement
+                        {% else %}
+                        <span class="status-indicator status-critical"></span> Poor
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Cumulative Layout Shift (CLS)</td>
+                    <td>{{ audit.performance.cls|round(3) }}</td>
+                    <td>
+                        {% if audit.performance.cls < 0.1 %}
+                        <span class="status-indicator status-good"></span> Good
+                        {% elif audit.performance.cls < 0.25 %}
+                        <span class="status-indicator status-warning"></span> Needs improvement
+                        {% else %}
+                        <span class="status-indicator status-critical"></span> Poor
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Structured Data</h2>
+        <div class="metric-box">
+            <h4>
+                <span class="status-indicator status-{% if audit.technical.schema_markup.has_schema %}good{% else %}warning{% endif %}"></span>
+                Schema Markup
+            </h4>
+            <p>
+                {% if audit.technical.schema_markup.has_schema %}
+                ✓ Schema markup detected ({{ audit.technical.schema_markup.schema_count }} instances).
+                Types: {{ audit.technical.schema_markup.schema_types|join(', ') }}
+                {% else %}
+                ✗ No schema markup detected. Add structured data to enhance search results.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- On-Page SEO Analysis -->
+    <div class="section page-break">
+        <h1>On-Page SEO Analysis</h1>
+
+        <h2>Meta Tags</h2>
+        <div class="metric-box">
+            <h4>Title Tag</h4>
+            <p><strong>Current:</strong> "{{ audit.onpage.title }}"</p>
+            <p><strong>Length:</strong> {{ audit.onpage.title_length }} characters</p>
+            <p>
+                {% if 30 <= audit.onpage.title_length <= 60 %}
+                ✓ Optimal length for search results display.
+                {% elif audit.onpage.title_length > 0 %}
+                ⚠ Consider adjusting to 30-60 characters for best results.
+                {% else %}
+                ✗ Missing title tag. Add a descriptive, keyword-rich title.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="metric-box">
+            <h4>Meta Description</h4>
+            <p><strong>Current:</strong> "{{ audit.onpage.meta_description[:150] }}{% if audit.onpage.meta_description|length > 150 %}...{% endif %}"</p>
+            <p><strong>Length:</strong> {{ audit.onpage.meta_description_length }} characters</p>
+            <p>
+                {% if 120 <= audit.onpage.meta_description_length <= 160 %}
+                ✓ Optimal length for search results.
+                {% elif audit.onpage.meta_description_length > 0 %}
+                ⚠ Consider adjusting to 120-160 characters.
+                {% else %}
+                ✗ Missing meta description. Add one to improve click-through rates.
+                {% endif %}
+            </p>
+        </div>
+
+        <h2>Content Analysis</h2>
+        <div class="chart-container">
+            <img src="{{ charts.onpage_metrics }}" alt="On-Page Metrics">
+        </div>
+
+        <div class="metric-box">
+            <h4>Word Count</h4>
+            <p><strong>{{ audit.onpage.word_count }}</strong> words detected</p>
+            <p>
+                {% if audit.onpage.word_count >= 1500 %}
+                ✓ Excellent content depth. Long-form content tends to rank better.
+                {% elif audit.onpage.word_count >= 1000 %}
+                ✓ Good content length for most topics.
+                {% elif audit.onpage.word_count >= 500 %}
+                ⚠ Consider expanding content to 1000+ words for better rankings.
+                {% else %}
+                ✗ Thin content. Add more high-quality, relevant content.
+                {% endif %}
+            </p>
+        </div>
+
+        <h2>Heading Structure</h2>
+        <div class="metric-box">
+            <h4>H1 Tag</h4>
+            <p><strong>Count:</strong> {{ audit.technical.headings.h1_count }}</p>
+            {% if audit.technical.headings.h1_text %}
+            <p><strong>Text:</strong> "{{ audit.technical.headings.h1_text }}"</p>
+            {% endif %}
+            <p>
+                {% if audit.technical.headings.has_proper_hierarchy %}
+                ✓ Proper heading hierarchy with exactly one H1 tag.
+                {% elif audit.technical.headings.h1_count == 0 %}
+                ✗ No H1 tag found. Add one with your primary keyword.
+                {% else %}
+                ⚠ Multiple H1 tags detected. Use only one H1 per page.
+                {% endif %}
+            </p>
+        </div>
+
+        <h2>Image Optimization</h2>
+        <div class="metric-box">
+            <h4>Alt Text Coverage</h4>
+            <p>
+                <strong>{{ audit.onpage.images.images_with_alt }}</strong> of
+                <strong>{{ audit.onpage.images.total_images }}</strong> images have alt text
+                ({{ audit.onpage.images.alt_percentage }}%)
+            </p>
+            <p>
+                {% if audit.onpage.images.alt_percentage >= 90 %}
+                ✓ Excellent image optimization!
+                {% elif audit.onpage.images.alt_percentage >= 70 %}
+                ⚠ Good, but add alt text to remaining {{ audit.onpage.images.images_without_alt }} images.
+                {% else %}
+                ✗ Poor image optimization. Add descriptive alt text to improve accessibility and SEO.
+                {% endif %}
+            </p>
+        </div>
+
+        <h2>Internal Linking</h2>
+        <div class="metric-box">
+            <h4>Internal Links</h4>
+            <p><strong>{{ audit.onpage.internal_links.count }}</strong> internal links found</p>
+            <p>
+                {% if audit.onpage.internal_links.count >= 10 %}
+                ✓ Strong internal linking structure.
+                {% elif audit.onpage.internal_links.count >= 5 %}
+                ⚠ Good internal linking. Consider adding more contextual links.
+                {% else %}
+                ✗ Weak internal linking. Add more links to related content.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Competitive Analysis -->
+    {% if audit.competitors and not audit.competitors.error %}
+    <div class="section page-break">
+        <h1>Competitive Analysis</h1>
+
+        <h2>SERP Position</h2>
+        <div class="metric-box">
+            <h4>Target Keyword: "{{ audit.primary_keyword }}"</h4>
+            <p>
+                {% if audit.competitors.current_position %}
+                Your current position: <strong>#{{ audit.competitors.current_position }}</strong> in search results
+                {% else %}
+                Your site is not currently ranking in the top 10 for this keyword.
+                {% endif %}
+            </p>
+        </div>
+
+        <h2>Top Competitors</h2>
+        <p>Analysis of the top-ranking pages for your primary keyword:</p>
+
+        {% for comp in audit.competitors.top_competitors %}
+        <div class="metric-box">
+            <h4>Position {{ comp.position }}: {{ comp.url }}</h4>
+            <p><strong>Title:</strong> "{{ comp.title }}" ({{ comp.title_length }} chars)</p>
+            <p><strong>Description:</strong> "{{ comp.description[:100] }}..." ({{ comp.description_length }} chars)</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- All Recommendations -->
+    <div class="section page-break">
+        <h1>Complete Recommendations List</h1>
+        <p>Prioritized action items to improve your SEO performance:</p>
+
+        {% for rec in score.recommendations %}
+        <div class="recommendation {{ rec.priority }}">
+            <span class="priority-badge priority-{{ rec.priority }}">{{ rec.priority }}</span>
+            <h4>{{ rec.issue }}</h4>
+            <p><strong>Category:</strong> {{ rec.category }}</p>
+            <p><strong>Recommendation:</strong> {{ rec.recommendation }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>
+            This report was generated by Level Play Digital on {{ generated_date }}.
+            <br>
+            For questions or assistance implementing these recommendations, contact us at hello@levelplaydigital.com
+        </p>
+    </div>
+</body>
+</html>

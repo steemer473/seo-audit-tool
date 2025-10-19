@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your SEO Report is Ready! - Level Play Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1E2E52 0%, #0A1220 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 650px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 48px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 32px;
+        }
+
+        .logo img {
+            width: 180px;
+            height: auto;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #00B8D9, #00E5A0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #1E2E52;
+            margin-bottom: 12px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        .score-container {
+            background: linear-gradient(135deg, rgba(255, 77, 38, 0.1), rgba(0, 184, 217, 0.1));
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .score-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .score-display {
+            font-size: 72px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF4D26, #00B8D9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .score-description {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 16px;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: linear-gradient(135deg, #FF4D26, #00B8D9);
+            color: white;
+            border-radius: 24px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .url-display {
+            color: #00B8D9;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 32px;
+            word-break: break-all;
+        }
+
+        .download-button {
+            display: inline-block;
+            padding: 18px 48px;
+            background: linear-gradient(135deg, #FF4D26, #00B8D9);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-bottom: 24px;
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 77, 38, 0.3);
+        }
+
+        .download-icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .info-box {
+            background: #F5F5F7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E2E52;
+            margin-bottom: 16px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box li {
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-box li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #00B8D9;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .cta-section {
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 2px solid #E6E6EB;
+        }
+
+        .cta-section h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E2E52;
+            margin-bottom: 12px;
+        }
+
+        .cta-section p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 14px 36px;
+            background: white;
+            border: 2px solid #1E2E52;
+            color: #1E2E52;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: #1E2E52;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 32px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .score-display {
+                font-size: 56px;
+            }
+
+            .download-button {
+                padding: 16px 32px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="/static/logo-dark.svg" alt="Level Play Digital">
+        </div>
+
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+
+        <h1>Your SEO Report is Ready!</h1>
+        <p class="greeting">Hi {{ first_name }}, your comprehensive SEO audit is complete.</p>
+
+        <div class="url-display">{{ url }}</div>
+
+        <div class="score-container">
+            <div class="score-label">Your SEO Score</div>
+            <div class="score-display">{{ score }}<span style="font-size: 48px; opacity: 0.6;">/100</span></div>
+            <div class="score-description">
+                {% if score >= 90 %}
+                Excellent! Your website has outstanding SEO optimization.
+                {% elif score >= 80 %}
+                Great job! Your website is well-optimized with room for improvement.
+                {% elif score >= 70 %}
+                Good foundation. Implement the recommendations to boost your rankings.
+                {% elif score >= 60 %}
+                Needs work. Focus on the critical issues first.
+                {% else %}
+                Significant improvements needed. Let's get your SEO on track.
+                {% endif %}
+            </div>
+        </div>
+
+        <a href="/audit/download/{{ report_uuid }}" class="download-button">
+            <span class="download-icon">📥</span>
+            Download Your Full Report (PDF)
+        </a>
+
+        <div class="info-box">
+            <h3>Your Report Includes:</h3>
+            <ul>
+                <li>Technical SEO score breakdown (HTTPS, mobile, speed, schema)</li>
+                <li>On-page optimization analysis (titles, descriptions, content)</li>
+                <li>Competitive positioning for your primary keyword</li>
+                <li>Prioritized recommendations with actionable next steps</li>
+                <li>Visual charts and performance metrics</li>
+            </ul>
+        </div>
+
+        <div class="cta-section">
+            <h3>Want Help Implementing These Fixes?</h3>
+            <p>
+                Our team at Level Play Digital specializes in SEO optimization and can help you climb the rankings.
+                Schedule a free consultation to discuss your results.
+            </p>
+            <a href="https://levelplaydigital.com/contact" class="cta-button" target="_blank">
+                Schedule Free Consultation
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Report will be available for 3 days • Questions? <a href="mailto:hello@levelplaydigital.com" style="color: #00B8D9;">Contact us</a></p>
+        </div>
+    </div>
+</body>
+</html>

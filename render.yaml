@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: seo-audit-tool
+    env: python
+    plan: starter  # Start with free tier, upgrade to standard ($7/mo) when ready
+    region: oregon
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      playwright install --with-deps chromium
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_PATH
+        value: ./data/audit.db
+      - key: PDF_STORAGE_PATH
+        value: ./data/reports
+      - key: DRAFT_STORAGE_PATH
+        value: ./data/drafts
+      - key: GHL_WEBHOOK_URL
+        sync: false  # Set in Render dashboard
+      - key: GHL_API_KEY
+        sync: false
+      - key: CLAUDE_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ENVIRONMENT
+        value: production
+
+# Disk storage for reports (upgrade to standard plan for persistent disk)
+# Standard plan includes 10GB SSD for $7/month

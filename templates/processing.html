@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyzing Your Website - Level Play Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1E2E52 0%, #0A1220 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 48px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 32px;
+        }
+
+        .logo img {
+            width: 180px;
+            height: auto;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E2E52;
+            margin-bottom: 12px;
+        }
+
+        .url-display {
+            color: #00B8D9;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 32px;
+            word-break: break-all;
+        }
+
+        .loader-container {
+            margin: 48px 0;
+        }
+
+        .spinner {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 32px;
+            border: 6px solid #F5F5F7;
+            border-top: 6px solid #FF4D26;
+            border-right: 6px solid #00B8D9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-text {
+            font-size: 18px;
+            color: #1E2E52;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .status-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .progress-steps {
+            margin-top: 48px;
+            text-align: left;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: #F5F5F7;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, rgba(255, 77, 38, 0.1), rgba(0, 184, 217, 0.1));
+            border-left: 4px solid #00B8D9;
+        }
+
+        .step.completed {
+            background: rgba(0, 184, 217, 0.1);
+            border-left: 4px solid #00B8D9;
+        }
+
+        .step-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #D6D6DE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-weight: 700;
+            color: white;
+            font-size: 14px;
+        }
+
+        .step.active .step-icon {
+            background: linear-gradient(135deg, #FF4D26, #00B8D9);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .step.completed .step-icon {
+            background: #00B8D9;
+        }
+
+        .step.completed .step-icon:after {
+            content: "✓";
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #1E2E52;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .error-container {
+            display: none;
+            background: #FFF0F0;
+            border: 2px solid #FFD6D6;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .error-container.show {
+            display: block;
+        }
+
+        .error-title {
+            color: #D8000C;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .error-message {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            margin-top: 24px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #FF4D26, #00B8D9);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .url-display {
+                font-size: 16px;
+            }
+
+            .spinner {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="/static/logo-dark.svg" alt="Level Play Digital">
+        </div>
+
+        <h1>Analyzing Your Website</h1>
+        <div class="url-display">{{ url }}</div>
+
+        <div class="loader-container">
+            <div class="spinner"></div>
+            <div class="status-text" id="statusText">Initializing audit...</div>
+            <div class="status-description" id="statusDesc">
+                This usually takes 2-3 minutes. Please don't close this page.
+            </div>
+        </div>
+
+        <div class="progress-steps">
+            <div class="step" id="step1">
+                <div class="step-icon">1</div>
+                <div class="step-content">
+                    <div class="step-title">Technical Analysis</div>
+                    <div class="step-desc">Checking SSL, mobile responsiveness, page speed</div>
+                </div>
+            </div>
+
+            <div class="step" id="step2">
+                <div class="step-icon">2</div>
+                <div class="step-content">
+                    <div class="step-title">On-Page SEO</div>
+                    <div class="step-desc">Analyzing title tags, meta descriptions, content quality</div>
+                </div>
+            </div>
+
+            <div class="step" id="step3">
+                <div class="step-icon">3</div>
+                <div class="step-content">
+                    <div class="step-title">Competitive Analysis</div>
+                    <div class="step-desc">Comparing against top-ranking competitors</div>
+                </div>
+            </div>
+
+            <div class="step" id="step4">
+                <div class="step-icon">4</div>
+                <div class="step-content">
+                    <div class="step-title">Generating Report</div>
+                    <div class="step-desc">Creating your personalized PDF report</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-container" id="errorContainer">
+            <div class="error-title">Audit Failed</div>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="button-group">
+                <a href="/" class="button">Try Again</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const reportUuid = "{{ report_uuid }}";
+        let pollInterval;
+        let currentStep = 0;
+
+        const steps = [
+            { element: document.getElementById('step1'), status: 'processing' },
+            { element: document.getElementById('step2'), status: 'processing' },
+            { element: document.getElementById('step3'), status: 'scored' },
+            { element: document.getElementById('step4'), status: 'pdf_generated' },
+        ];
+
+        const statusMessages = {
+            'pending': 'Starting audit...',
+            'processing': 'Collecting technical data...',
+            'data_collected': 'Analyzing on-page SEO...',
+            'scored': 'Comparing with competitors...',
+            'pdf_generated': 'Finalizing your report...',
+            'completed': 'Report ready!',
+        };
+
+        function updateStep(stepIndex) {
+            if (stepIndex > currentStep) {
+                // Mark previous steps as completed
+                for (let i = 0; i < stepIndex; i++) {
+                    steps[i].element.classList.remove('active');
+                    steps[i].element.classList.add('completed');
+                }
+
+                // Mark current step as active
+                if (stepIndex < steps.length) {
+                    steps[stepIndex].element.classList.add('active');
+                }
+
+                currentStep = stepIndex;
+            }
+        }
+
+        async function pollStatus() {
+            try {
+                const response = await fetch(`/audit/status/${reportUuid}`);
+                const data = await response.json();
+
+                // Update status text
+                if (statusMessages[data.status]) {
+                    document.getElementById('statusText').textContent = statusMessages[data.status];
+                }
+
+                // Update progress steps
+                steps.forEach((step, index) => {
+                    const statusOrder = ['processing', 'data_collected', 'scored', 'pdf_generated'];
+                    const currentStatusIndex = statusOrder.indexOf(data.status);
+
+                    if (currentStatusIndex >= index) {
+                        updateStep(index + 1);
+                    }
+                });
+
+                if (data.status === 'completed') {
+                    clearInterval(pollInterval);
+                    updateStep(steps.length);
+                    document.getElementById('statusText').textContent = 'Report Complete!';
+                    document.getElementById('statusDesc').textContent = 'Redirecting to your report...';
+
+                    // Redirect to complete page
+                    setTimeout(() => {
+                        window.location.href = `/audit/complete/${reportUuid}`;
+                    }, 1500);
+                } else if (data.status === 'failed') {
+                    clearInterval(pollInterval);
+                    document.querySelector('.loader-container').style.display = 'none';
+                    document.querySelector('.progress-steps').style.display = 'none';
+                    document.getElementById('errorMessage').textContent =
+                        data.error_message || 'An unexpected error occurred during the audit.';
+                    document.getElementById('errorContainer').classList.add('show');
+                }
+            } catch (error) {
+                console.error('Error polling status:', error);
+            }
+        }
+
+        // Start polling every 2 seconds
+        pollInterval = setInterval(pollStatus, 2000);
+
+        // Initial poll
+        pollStatus();
+
+        // Activate first step
+        updateStep(0);
+    </script>
+</body>
+</html>
