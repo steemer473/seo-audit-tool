@@ -29,24 +29,17 @@ class SEOAuditEngine:
     async def run_audit(self) -> Dict[str, Any]:
         """Main audit orchestrator - runs all checks in one session"""
         async with async_playwright() as p:
-            # Use explicit executable path on production (Render)
-            launch_options = {
-                'headless': True,
-                'args': [
+            # Launch browser with Render-friendly options
+            # PLAYWRIGHT_BROWSERS_PATH is set in start.sh on Render
+            browser = await p.chromium.launch(
+                headless=True,
+                args=[
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage',
                     '--disable-blink-features=AutomationControlled'
                 ]
-            }
-
-            # ALWAYS try to use full chromium browser first (works on Render)
-            # If path doesn't exist, Playwright will fall back to default
-            chromium_path = '/opt/render/.cache/ms-playwright/chromium-1187/chrome-linux/chrome'
-            print(f"[AUDIT] Attempting to use chromium at: {chromium_path}")
-            launch_options['executable_path'] = chromium_path
-
-            browser = await p.chromium.launch(**launch_options)
+            )
 
             try:
                 page = await browser.new_page()
